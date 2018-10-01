@@ -123,7 +123,7 @@ export class AuthenticationService {
       json: true
     }, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        pems = {};
+        let pems = {};
         let keys = body['keys'];
         for (let i = 0; i < keys.length; i++) {
           //Convert each key to PEM
@@ -189,88 +189,88 @@ export class AuthenticationService {
     })
   }
 
-  DeleteUser() {
-    let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-      Username: username,
-      Password: password,
-    });
+  // DeleteUser() {
+  //   let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+  //     Username: username,
+  //     Password: password,
+  //   });
 
-    let userData = {
-      Username: username,
-      Pool: userPool
-    };
-    let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+  //   let userData = {
+  //     Username: username,
+  //     Pool: userPool
+  //   };
+  //   let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (result) {
-        cognitoUser.deleteUser((err, result) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("Successfully deleted the user.");
-            console.log(result);
-          }
-        });
-      },
-      onFailure: function (err) {
-        console.log(err);
-      },
-    });
-  }
+  //   cognitoUser.authenticateUser(authenticationDetails, {
+  //     onSuccess: function (result) {
+  //       cognitoUser.deleteUser((err, result) => {
+  //         if (err) {
+  //           console.log(err);
+  //         } else {
+  //           console.log("Successfully deleted the user.");
+  //           console.log(result);
+  //         }
+  //       });
+  //     },
+  //     onFailure: function (err) {
+  //       console.log(err);
+  //     },
+  //   });
+  // }
 
-  deleteAttributes(username, password) {
-    let attributeList = [];
-    attributeList.push("custom:scope");
-    attributeList.push("name");
+  // deleteAttributes(username, password) {
+  //   let attributeList = [];
+  //   attributeList.push("custom:scope");
+  //   attributeList.push("name");
 
-    let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-      Username: username,
-      Password: password,
-    });
+  //   let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+  //     Username: username,
+  //     Password: password,
+  //   });
 
-    let userData = {
-      Username: username,
-      Pool: userPool
-    };
-    let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+  //   let userData = {
+  //     Username: username,
+  //     Pool: userPool
+  //   };
+  //   let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-    cognitoUser.deleteAttributes(attributeList, (err, result) => {
-      if (err) {
-        //handle error
-      } else {
-        console.log(result);
-      }
-    });
-  }
+  //   cognitoUser.deleteAttributes(attributeList, (err, result) => {
+  //     if (err) {
+  //       //handle error
+  //     } else {
+  //       console.log(result);
+  //     }
+  //   });
+  // }
 
-  ChangePassword(username, password, newpassword) {
-    let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-      Username: username,
-      Password: password,
-    });
+  // ChangePassword(username, password, newpassword) {
+  //   let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+  //     Username: username,
+  //     Password: password,
+  //   });
 
-    let userData = {
-      Username: username,
-      Pool: userPool
-    };
-    let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+  //   let userData = {
+  //     Username: username,
+  //     Pool: userPool
+  //   };
+  //   let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (result) {
-        cognitoUser.changePassword(password, newpassword, (err, result) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("Successfully changed password of the user.");
-            console.log(result);
-          }
-        });
-      },
-      onFailure: function (err) {
-        console.log(err);
-      },
-    });
-  }
+  //   cognitoUser.authenticateUser(authenticationDetails, {
+  //     onSuccess: function (result) {
+  //       cognitoUser.changePassword(password, newpassword, (err, result) => {
+  //         if (err) {
+  //           console.log(err);
+  //         } else {
+  //           console.log("Successfully changed password of the user.");
+  //           console.log(result);
+  //         }
+  //       });
+  //     },
+  //     onFailure: function (err) {
+  //       console.log(err);
+  //     },
+  //   });
+  // }
 
   constructor() { }
 }

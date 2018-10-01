@@ -16,6 +16,7 @@ import { routing } from './app.routing';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
+import { AuthenticationService } from './authentication.service';
 
 @NgModule({
     imports: [
@@ -34,7 +35,7 @@ import { RegisterComponent } from './register';
     providers: [
         // AuthGuard,
         // AlertService,
-        // AuthenticationService,
+        AuthenticationService,
         // UserService,
         // { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
