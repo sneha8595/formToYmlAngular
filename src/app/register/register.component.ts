@@ -23,32 +23,32 @@ export class RegisterComponent implements OnInit {
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            username: ['', Validators.required],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            name: ['', Validators.required],
+            picture: ['', Validators.required],
+            email: ['', Validators.required],
+            gender: ['', [Validators.required]],
+            birthdate : ['', [Validators.required]],
+            phone_number: ['', [Validators.required]],
+            address: ['', [Validators.required]],
+            password: ['', [Validators.required]],
+            passwordTwo: ['', [Validators.required]],
         });
     }
 
-    // convenience getter for easy access to form fields
-    get f() { return this.registerForm.controls; }
-
     onSubmit() {
+        let that = this;
         this.submitted = true;
 
         // stop here if form is invalid
-        if (this.registerForm.invalid) {
+        if (this.registerForm.invalid || this.registerForm.controls.password.value !== this.registerForm.controls.passwordTwo.value) {
             return;
         }
-
+        delete this.registerForm.value.passwordTwo;
         this.loading = true;
-        const userData = {
-
-        }
-        this.authenticationService.registerUser(userData, function (success) {
+        this.authenticationService.registerUser(this.registerForm.value, function (success) {
             if (success){
                 //this.alertService.success('Registration successful', true);
-                this.router.navigate(['/login']);
+                that.router.navigate(['/login']);
             }
             else {
                 this.loading = false;

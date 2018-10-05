@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
+import { CookieService } from 'ngx-cookie-service';
 
 // import { AlertService, AuthenticationService } from '../_services';
 
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        // private alertService: AlertService
+        private cookieService: CookieService
     ) { }
 
     ngOnInit() {
@@ -37,6 +38,7 @@ export class LoginComponent implements OnInit {
     get f() { return this.loginForm.controls; }
 
     onSubmit() {
+        let that = this;
         this.submitted = true;
 
         // stop here if form is invalid
@@ -46,10 +48,12 @@ export class LoginComponent implements OnInit {
 
         this.loading = true;
         this.authenticationService.login(this.f.username.value, this.f.password.value, function (success) {
-            if (success)
-                this.router.navigate([this.returnUrl]);
+            if (success){
+                that.cookieService.set('user', 'dwjdhwuidywdyw89dywdwdywideywuidewjedhwuiy', 600);
+                that.router.navigate([that.returnUrl]);
+            }
             else {
-                this.loading = false;
+                that.loading = false;
 
             }
         });

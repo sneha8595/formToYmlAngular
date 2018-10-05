@@ -16,26 +16,30 @@ import { routing } from './app.routing';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
+import { ResetPasswordComponent } from './resetPassword';
 import { AuthenticationService } from './authentication.service';
+import { CookieService } from "ngx-cookie-service";
 
 @NgModule({
     imports: [
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
-        routing
+        routing,
     ],
     declarations: [
         AppComponent,
         // AlertComponent,
         HomeComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        ResetPasswordComponent,
     ],
     providers: [
         // AuthGuard,
         // AlertService,
         AuthenticationService,
+        CookieService
         // UserService,
         // { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

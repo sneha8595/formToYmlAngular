@@ -6,33 +6,29 @@ import * as jwkToPem from "jwk-to-pem";
 import * as jwt from "jsonwebtoken";
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import * as config from "../assets/config"
 
-@Injectable({
-  providedIn: 'root'
-})
 const poolData = {
-  UserPoolId: "eu-central-1_XWqoZFTNG", // Your user pool id here    
-  ClientId: "6tia1oh20d266r8ukeco5a8kgk" // Your client id here
+  UserPoolId: config.awsCredentials.cognito_pool_id, // Your user pool id here    
+  ClientId: config.awsCredentials.cognito_ClientId // Your client id here
 };
 const pool_region = 'eu-central-1';
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
+@Injectable({
+  providedIn: 'root'
+})
+
 export class AuthenticationService {
   registerUser(newUserData, callback) {
     let attributeList = [];
-    for(var key in newUserData){
-      attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: key, Value: newUserData[key] }));
+    for (var key in newUserData) {
+      if (key != 'password')
+        attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: key, Value: newUserData[key] }));
     }
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "name", Value: newUserData.name }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "picture", Value: newUserData.picture }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: newUserData.email }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "gender", Value: newUserData.gender }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "birthdate", Value: newUserData.birthdate }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "locale", Value: "EN_US" }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "phone_number", Value: "+5412614324321" }));
-    // attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "address", Value: "CMB" }));
 
-    userPool.signUp(newUserData.email, 'SamplePassword123', attributeList, null, function (err, result) {
+
+    userPool.signUp(newUserData.email, newUserData.password, attributeList, null, function (err, result) {
       if (err) {
         console.log(err);
         callback();
@@ -44,14 +40,14 @@ export class AuthenticationService {
     });
   }
 
-  login(userName, password, callback)  {
+  login(userName, password, callback) {
     let authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
       Username: userName,
       Password: password,
     });
 
     let userData = {
-      Username: 'sampleEmail@gmail.com',
+      Username: userName,
       Pool: userPool
     };
     let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
@@ -65,8 +61,7 @@ export class AuthenticationService {
       onFailure: function (err) {
         console.log(err);
         callback();
-      },
-
+      }
     });
   }
 
@@ -84,6 +79,29 @@ export class AuthenticationService {
     if (cognitoUser != null) {
       cognitoUser.signOut();
     }
+  }
+
+  setNewPassword(username, callback) {
+    const userData = {
+      Username: username,
+      Pool: userPool
+    };
+    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    cognitoUser.forgotPassword({
+      onSuccess: function (result) {
+        console.log('call result: ' + result);
+        callback(true);
+      },
+      onFailure: function (err) {
+        alert(err);
+        callback();
+      },
+      inputVerificationCode() {
+        const verificationCode = prompt('Please input verification code ', '');
+        const newPassword = prompt('Enter new password ', '');
+        cognitoUser.confirmPassword(verificationCode, newPassword, this);
+      }
+    });
   }
 
   update(username, password) {
