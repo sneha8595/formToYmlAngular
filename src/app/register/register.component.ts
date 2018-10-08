@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
-
 import { first } from 'rxjs/operators';
+import { ImageUploadS3Service } from '../image-upload-s3.service';
 
 // import { AlertService, UserService } from '../_services';
 
@@ -16,7 +16,8 @@ export class RegisterComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private imageUploadService: ImageUploadS3Service
         // private userService: UserService,
         // private alertService: AlertService
         ) { }
@@ -38,6 +39,7 @@ export class RegisterComponent implements OnInit {
     onSubmit() {
         let that = this;
         this.submitted = true;
+        this.registerForm.value.picture = (<any>document.getElementById('photoupload')).files;
 
         // stop here if form is invalid
         if (this.registerForm.invalid || this.registerForm.controls.password.value !== this.registerForm.controls.passwordTwo.value) {
@@ -45,15 +47,23 @@ export class RegisterComponent implements OnInit {
         }
         delete this.registerForm.value.passwordTwo;
         this.loading = true;
-        this.authenticationService.registerUser(this.registerForm.value, function (success) {
-            if (success){
-                //this.alertService.success('Registration successful', true);
-                that.router.navigate(['/login']);
+        this.imageUploadService.createAndAddPhoto(this.registerForm.value, (data) => {
+            if(!data){
+                return;
             }
-            else {
-                this.loading = false;
-
-            }
+            this.registerForm.value.picture = data.Location;
+            this.authenticationService.registerUser(this.registerForm.value, function (success) {
+                if (success){
+                    //this.alertService.success('Registration successful', true);
+                    that.router.navigate(['/login']);
+                }
+                else {
+                    that.loading = false;
+    
+                }
+            });
         });
+
+        
     }
 }

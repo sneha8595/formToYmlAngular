@@ -6,7 +6,8 @@ import * as jwkToPem from "jwk-to-pem";
 import * as jwt from "jsonwebtoken";
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import * as config from "../assets/config"
+import * as config from "../assets/config";
+import { ImageUploadS3Service } from './image-upload-s3.service';
 
 const poolData = {
   UserPoolId: config.awsCredentials.cognito_pool_id, // Your user pool id here    
@@ -20,13 +21,14 @@ const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 })
 
 export class AuthenticationService {
+  constructor(private imageUploadService: ImageUploadS3Service) { }
+
   registerUser(newUserData, callback) {
     let attributeList = [];
-    for (var key in newUserData) {
+    for (let key in newUserData) {
       if (key != 'password')
         attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: key, Value: newUserData[key] }));
     }
-
 
     userPool.signUp(newUserData.email, newUserData.password, attributeList, null, function (err, result) {
       if (err) {
@@ -290,5 +292,4 @@ export class AuthenticationService {
   //   });
   // }
 
-  constructor() { }
 }
