@@ -3,8 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 import { CookieService } from 'ngx-cookie-service';
-
-// import { AlertService, AuthenticationService } from '../_services';
+import { AlertService } from '../alert.service';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -12,13 +11,15 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl: string;
+    cookieValue = 'dwjdhwuidywdyw89dywdwdywideywuidewjedhwuiy';
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private alertService: AlertService
     ) { }
 
     ngOnInit() {
@@ -26,7 +27,7 @@ export class LoginComponent implements OnInit {
             username: ['', Validators.required],
             password: ['', Validators.required]
         });
-
+        this.cookieService.delete('user');
         // reset login status
         this.authenticationService.signOut();
 
@@ -43,18 +44,20 @@ export class LoginComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
+            that.alertService.error('Invalid credentials. Please try again');
             return;
         }
 
         this.loading = true;
         this.authenticationService.login(this.f.username.value, this.f.password.value, function (success) {
-            if (success){
-                that.cookieService.set('user', 'dwjdhwuidywdyw89dywdwdywideywuidewjedhwuiy', 600);
+            if (success) {
+                that.alertService.success('Successfully Logged in.');
+                that.cookieService.set('user', that.cookieValue, 1 / (24 * 6));
                 that.router.navigate([that.returnUrl]);
             }
             else {
                 that.loading = false;
-
+                that.alertService.error('Invalid credentials. Please try again');
             }
         });
 

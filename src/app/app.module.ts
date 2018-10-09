@@ -6,14 +6,16 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
-// import { AlertComponent } from './_directives';
-import { AuthGuard } from './_guards';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { ResetPasswordComponent } from './resetPassword';
+import { AlertComponent } from './alert/alert.component';
+
+import { AuthGuard } from './_guards';
 import { AuthenticationService } from './authentication.service';
 import { CookieService } from 'ngx-cookie-service';
+import { AlertService } from './alert.service';
 
 @NgModule({
     imports: [
@@ -24,7 +26,7 @@ import { CookieService } from 'ngx-cookie-service';
     ],
     declarations: [
         AppComponent,
-        // AlertComponent,
+        AlertComponent,
         HomeComponent,
         LoginComponent,
         RegisterComponent,
@@ -32,10 +34,9 @@ import { CookieService } from 'ngx-cookie-service';
     ],
     providers: [
         AuthGuard,
-        // AlertService,
+        AlertService,
         AuthenticationService,
         CookieService
-        // UserService,
     ],
     bootstrap: [AppComponent]
 })
