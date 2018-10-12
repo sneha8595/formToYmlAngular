@@ -5,9 +5,10 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { ResetPasswordComponent } from './resetPassword';
 import { AuthGuard } from './_guards';
+import { CreateMessageComponent } from './create-message/create-message.component';
 
 const appRoutes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: '', component: CreateMessageComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'forgotPassword', component: ResetPasswordComponent },

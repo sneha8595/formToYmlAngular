@@ -1,0 +1,65 @@
+<mat-card>
+    <mat-card-title>Send Message
+        <!-- <h2>Send Message to your friends</h2>
+        <button class="btn btn-danger float-right" [routerLink]="['/login']">Logout</button> -->
+    </mat-card-title>
+
+    <mat-card-content>
+            <form >
+                    <mat-form-field [formGroup]="createMessageForm"  class="example-full-width">
+                      <input matInput placeholder="Mobile Number" type="text" id="mobileNumber" [formControl]="mobileNumber" [errorStateMatcher]="matcher" >
+
+                        <mat-hint>Errors appear instantly!</mat-hint>
+                        <mat-error *ngIf="mobileNumber.hasError('required')">
+                        Mobile number is required
+                        </mat-error>
+                    </mat-form-field>
+                  </form>
+
+        <!-- <form [formGroup]="createMessageForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number</label>
+                <input type="text" id="mobileNumber" formControlName="mobileNumber" class="form-control" [ngClass]="{ 'is-invalid': mobileNumber && f.Username.errors }" />
+                <div *ngIf="submitted && f.mobileNumber.errors" class="invalid-feedback">
+                    <div *ngIf="f.mobileNumber.errors.required">Mobile Number is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="textMessage">Type Message</label>
+                <input type="text" id="textMessage" formControlName="textMessage" class="form-control" [ngClass]="{ 'is-invalid': textMessage && f.textMessage.errors }" />
+                <div *ngIf="submitted && f.textMessage.errors" class="invalid-feedback">
+                    <div *ngIf="f.textMessage.errors.required">Mobile Number is required</div>
+                </div>
+            </div>
+            <div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center">
+                <span style="font-size: 40px; background-color: #F3F5F6; padding: 0 10px;">
+                    OR
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="recordMessage">Record Message</label>
+                <input type="file" id="recordMessage" formControlName="recordMessage" accept="audio/*;capture=microphone">
+            </div>
+            <div class="form-group">
+                <mat-radio-group>
+                    <mat-radio-button value="instantSend" (change)="instantSend = true" [checked]="instantSend">Instant
+                        Send</mat-radio-button>
+                    <mat-radio-button value="schedule" (change)="instantSend = false">Schedule
+                        &nbsp;&nbsp;<input [hidden]="instantSend" type="date" />
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </form> -->
+    </mat-card-content>
+    <mat-card-actions>
+            <mat-grid-list cols="2" rowHeight="3:1">
+                    <mat-grid-tile>
+                            <button mat-raised-button color="primary" (click)="saveReminder">SAVE</button>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                            <button mat-raised-button color="basic" (click)="saveReminder">CANCEL</button>
+                    </mat-grid-tile>
+                  </mat-grid-list>
+    </mat-card-actions>
+
+</mat-card>
