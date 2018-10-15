@@ -1,8 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import {FormControl, FormGroup, FormBuilder, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
-
 import { AlertService } from "../alert.service";
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import * as _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+import {default as _rollupMoment} from 'moment';
+
+const moment = _rollupMoment || _moment;
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -14,10 +20,17 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
   templateUrl: "create-message.component.html",
-  styleUrls: ["create-message.component.css"]
+  styleUrls: ["create-message.component.css"],
+  providers: [
+    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
+    // `MatMomentDateModule` in your applications root module. We provide it at the component level
+    // here, due to limitations of our example generation script.
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+  ],
 })
 export class CreateMessageComponent implements OnInit {
-  createMessageForm: FormGroup;
+  createReminderForm: FormGroup;
   loading: Boolean = false;
   submitted = false;
   dialogResult = "";
@@ -26,29 +39,60 @@ export class CreateMessageComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private alertService: AlertService
-  ) {}
+    private alertService: AlertService,
+  ) {
+  }
 
   onSubmit() {
     this.submitted = true;
-    if (this.createMessageForm.invalid) {
+    if (this.createReminderForm.invalid) {
       return;
     }
     let that = this;
-    const data = { users: [{ user: this.createMessageForm.value }] };
+    const data = { users: [{ user: this.createReminderForm.value }] };
   }
 
   ngOnInit() {
-    this.createMessageForm = this.formBuilder.group({
+    this.createReminderForm = this.formBuilder.group({
       mobileNumber: ["", Validators.required],
       textMessage: [],
-      recordMessage: []
+      selectedMode: ['instantSend'],
+      scheduleDate: []
     });
+    let recorder = document.getElementById('recorder');
+    const player = document.getElementById('player');
+
+    // recorder.addEventListener('change', function (e) {
+    //     const file = (<any>e.target).files[0];
+    //     // Do something with the audio file.
+    //     player['src'] = URL.createObjectURL(file);
+    // });
+
+    let handleSuccess = function(stream) {
+      if (window.URL) {
+        player.src = window.URL.createObjectURL(stream);
+      } else {
+        player.src = stream;
+      }
+    };
+  
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        .then(handleSuccess);
+        let devices;
+        navigator.mediaDevices.enumerateDevices().then((devices1) => {
+          devices = devices1.filter((d) => d.kind === 'audioinput');
+        });
+
+        navigator.mediaDevices.getUserMedia({
+          audio: {
+            deviceId: devices && devices[0].deviceId
+          }
+        });
   }
 
   // convenience getter for easy access to form fields
   get f() {
-    return this.createMessageForm.controls;
+    return this.createReminderForm.controls;
   }
 
   saveReminder() {}

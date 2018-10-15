@@ -39,7 +39,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatTreeModule
+  MatTreeModule,
 } from "@angular/material";
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
@@ -58,11 +58,19 @@ import { AuthenticationService } from "./authentication.service";
 import { CookieService } from "ngx-cookie-service";
 import { AlertService } from "./alert.service";
 import { CreateMessageComponent } from "./create-message/create-message.component";
-import { DialogComponent } from "./dialog/dialog.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from "@angular/forms";
 
-@NgModule({
+@NgModule({  
+  declarations: [
+    AppComponent,
+    AlertComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    ResetPasswordComponent,
+    CreateMessageComponent
+  ],
   imports: [
     FormsModule,
     BrowserModule,
@@ -104,19 +112,8 @@ import { FormsModule } from '@angular/forms';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
-  declarations: [
-    AppComponent,
-    AlertComponent,
-    HomeComponent,
-    LoginComponent,
-    RegisterComponent,
-    ResetPasswordComponent,
-    CreateMessageComponent,
-    DialogComponent
-  ],
-  entryComponents: [DialogComponent],
   providers: [
     AuthGuard,
     AlertService,
@@ -126,4 +123,5 @@ import { FormsModule } from '@angular/forms';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
