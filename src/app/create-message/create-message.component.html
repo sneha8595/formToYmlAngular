@@ -5,7 +5,7 @@
     </mat-card-title>
 
     <mat-card-content>
-        <form [formGroup]="createReminderForm">
+        <form [formGroup]="createReminderForm" (ngSubmit)="onSubmit()">
             <mat-form-field class="example-full-width">
                 <span matPrefix>+91 &nbsp;</span>
                 <input type="tel" matInput placeholder="Mobile Number" formControlName="mobileNumber"
@@ -26,7 +26,7 @@
                 <mat-hint align="end">{{textMessageEle.value.length}} / 256</mat-hint>
             </mat-form-field>
 
-            <div style="width: 100%; height: 10px; border-bottom: 1px solid black; text-align: center">
+            <!-- <div style="width: 100%; height: 10px; border-bottom: 1px solid black; text-align: center">
                 <span style="background-color: #ffffff; padding: 0 10px;">
                     OR
                 </span>
@@ -37,7 +37,7 @@
 
                 <input type="file" accept="audio/*" capture id="recorder">
                 <audio id="player" controls></audio>
-            </div>
+            </div> -->
 
             <div>
                 <label>Select Mode </label>
@@ -55,53 +55,20 @@
                 </mat-radio-group>
             </div>
 
+            <mat-card-actions>
+                <mat-grid-list cols="2" rowHeight="3:1">
+                    <mat-grid-tile>
+                        <button mat-raised-button color="primary" type="submit" >SAVE</button>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <button mat-raised-button color="basic" (click)="saveReminder">CANCEL</button>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-card-actions>
 
-        </form>
 
-        <!-- <form [formGroup]="createMessageForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="mobileNumber">Mobile Number</label>
-                <input type="text" id="mobileNumber" formControlName="mobileNumber" class="form-control" [ngClass]="{ 'is-invalid': mobileNumber && f.Username.errors }" />
-                <div *ngIf="submitted && f.mobileNumber.errors" class="invalid-feedback">
-                    <div *ngIf="f.mobileNumber.errors.required">Mobile Number is required</div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="textMessage">Type Message</label>
-                <input type="text" id="textMessage" formControlName="textMessage" class="form-control" [ngClass]="{ 'is-invalid': textMessage && f.textMessage.errors }" />
-                <div *ngIf="submitted && f.textMessage.errors" class="invalid-feedback">
-                    <div *ngIf="f.textMessage.errors.required">Mobile Number is required</div>
-                </div>
-            </div>
-            <div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center">
-                <span style="font-size: 40px; background-color: #F3F5F6; padding: 0 10px;">
-                    OR
-                </span>
-            </div>
-            <div class="form-group">
-                <label for="recordMessage">Record Message</label>
-                <input type="file" id="recordMessage" formControlName="recordMessage" accept="audio/*;capture=microphone">
-            </div>
-            <div class="form-group">
-                <mat-radio-group>
-                    <mat-radio-button value="instantSend" (change)="instantSend = true" [checked]="instantSend">Instant
-                        Send</mat-radio-button>
-                    <mat-radio-button value="schedule" (change)="instantSend = false">Schedule
-                        &nbsp;&nbsp;<input [hidden]="instantSend" type="date" />
-                    </mat-radio-button>
-                </mat-radio-group>
-            </div>
-        </form> -->
+        </form>        
     </mat-card-content>
-    <mat-card-actions>
-        <mat-grid-list cols="2" rowHeight="3:1">
-            <mat-grid-tile>
-                <button mat-raised-button color="primary" (click)="saveReminder">SAVE</button>
-            </mat-grid-tile>
-            <mat-grid-tile>
-                <button mat-raised-button color="basic" (click)="saveReminder">CANCEL</button>
-            </mat-grid-tile>
-        </mat-grid-list>
-    </mat-card-actions>
+    
 
 </mat-card>

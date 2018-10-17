@@ -6,9 +6,11 @@ import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-mome
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
-import {default as _rollupMoment} from 'moment';
+//import {default as _rollupMoment} from 'moment';
 
-const moment = _rollupMoment || _moment;
+import {ReminderHandlerService} from '../reminder-handler.service';
+
+const moment = _moment;
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -40,6 +42,7 @@ export class CreateMessageComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private alertService: AlertService,
+    private reminderService: ReminderHandlerService
   ) {
   }
 
@@ -49,7 +52,16 @@ export class CreateMessageComponent implements OnInit {
       return;
     }
     let that = this;
-    const data = { users: [{ user: this.createReminderForm.value }] };
+    console.log(this.createReminderForm.value);
+    const instantSend = this.f.selectedMode == 'instantSend'? true: false;
+    const mNumber = this.f.mobileNumber;
+    const textMessage = this.f.textMessage;
+    if(instantSend){
+      this.reminderService.sendInstantMessage(mNumber, textMessage);
+    }else{
+      this.reminderService.queueReminder(mNumber, textMessage, this.f.scheduleDate);
+    }
+    
   }
 
   ngOnInit() {
@@ -59,35 +71,35 @@ export class CreateMessageComponent implements OnInit {
       selectedMode: ['instantSend'],
       scheduleDate: []
     });
-    let recorder = document.getElementById('recorder');
-    const player = document.getElementById('player');
+    // let recorder = document.getElementById('recorder');
+    // const player = document.getElementById('player');
 
-    // recorder.addEventListener('change', function (e) {
-    //     const file = (<any>e.target).files[0];
-    //     // Do something with the audio file.
-    //     player['src'] = URL.createObjectURL(file);
-    // });
+    // // recorder.addEventListener('change', function (e) {
+    // //     const file = (<any>e.target).files[0];
+    // //     // Do something with the audio file.
+    // //     player['src'] = URL.createObjectURL(file);
+    // // });
 
-    let handleSuccess = function(stream) {
-      if (window.URL) {
-        player.src = window.URL.createObjectURL(stream);
-      } else {
-        player.src = stream;
-      }
-    };
+    // let handleSuccess = function(stream) {
+    //   if (window.URL) {
+    //     player.src = window.URL.createObjectURL(stream);
+    //   } else {
+    //     player.src = stream;
+    //   }
+    // };
   
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-        .then(handleSuccess);
-        let devices;
-        navigator.mediaDevices.enumerateDevices().then((devices1) => {
-          devices = devices1.filter((d) => d.kind === 'audioinput');
-        });
+    // navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    //     .then(handleSuccess);
+    //     let devices;
+    //     navigator.mediaDevices.enumerateDevices().then((devices1) => {
+    //       devices = devices1.filter((d) => d.kind === 'audioinput');
+    //     });
 
-        navigator.mediaDevices.getUserMedia({
-          audio: {
-            deviceId: devices && devices[0].deviceId
-          }
-        });
+    //     navigator.mediaDevices.getUserMedia({
+    //       audio: {
+    //         deviceId: devices && devices[0].deviceId
+    //       }
+    //     });
   }
 
   // convenience getter for easy access to form fields
