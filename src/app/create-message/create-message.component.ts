@@ -53,15 +53,14 @@ export class CreateMessageComponent implements OnInit {
     }
     let that = this;
     console.log(this.createReminderForm.value);
-    const instantSend = this.f.selectedMode == 'instantSend'? true: false;
+    const instantSend = this.f.selectedMode.value === 'instantSend';
     const mNumber = this.f.mobileNumber;
     const textMessage = this.f.textMessage;
     if(instantSend){
       this.reminderService.sendInstantMessage(mNumber, textMessage);
     }else{
       this.reminderService.queueReminder(mNumber, textMessage, this.f.scheduleDate);
-    }
-    
+    }    
   }
 
   ngOnInit() {
